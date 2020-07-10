@@ -1,8 +1,10 @@
 
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
 on:
   push:
     branches: [ master ]
-  
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -14,23 +16,23 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-      
+
     - name: Setup Node.js environment
-      uses: actions/setup-node@beta-v2
-      with:
-        version: 12 
-      
-      
+      uses: actions/setup-node@v2-beta
+      with: 
+        version: 12
+        
     - name: GitHub Action for Yarn
       uses: Borales/actions-yarn@v2.1.0
       with:
         # Yarn command
         cmd: install # npm install/ yarn install
-       
-       
-   
+    
+    - name: Creating build
+      run: yarn build
+    
     - name: installing surge  
-      run: npm install --global surge
-      
+      run: npm install -g surge
+    
     - name: deploying on surge
-      run: surge ./build project-practice.surge.sh --token ${{secrets.MY_TOKEN_SURGE}}  
+      run: surge ./build  project-practice.surge.sh --token ${{secrets.MY_TOKEN_SURGE}}  
